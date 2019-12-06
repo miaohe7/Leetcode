@@ -1,0 +1,39 @@
+/*Given a string S, remove the vowels 'a', 'e', 'i', 'o', and 'u' from it, and return the new string.
+
+ 
+
+Example 1:
+
+Input: "leetcodeisacommunityforcoders"
+Output: "ltcdscmmntyfrcdrs"
+Example 2:
+
+Input: "aeiou"
+Output: ""
+ 
+
+Note:
+
+S consists of lowercase English letters only.
+1 <= S.length <= 1000*/
+
+
+class Solution {
+public:
+    string removeVowels(string S) {
+        int len = S.length();
+        int i = 0;
+        while(i < len){
+            char c = S[i];
+            if ((c == 'a') || (c == 'e') || (c == 'i') || (c ==  'o') || (c == 'u')){
+                S.erase(i,1);
+                len--;
+            }else i++;
+        }
+        return S;
+    }
+};
+
+//1.  Do not use for loop because the length of the string afer erase would change, therefore while
+//  loop should be used.
+//2.  Notice that each time we erase a char the len need to be decreased.
