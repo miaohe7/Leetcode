@@ -1,0 +1,118 @@
+
+/*International Morse Code defines a standard encoding where each letter is mapped to a series of dots and dashes, as follows: "a" maps to ".-", "b" maps to "-...", "c" maps to "-.-.", and so on.
+
+For convenience, the full table for the 26 letters of the English alphabet is given below:
+
+[".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."]
+Now, given a list of words, each word can be written as a concatenation of the Morse code of each letter. For example, "cba" can be written as "-.-..--...", (which is the concatenation "-.-." + "-..." + ".-"). We'll call such a concatenation, the transformation of a word.
+
+Return the number of different transformations among all words we have.
+
+Example:
+Input: words = ["gin", "zen", "gig", "msg"]
+Output: 2
+Explanation: 
+The transformation of each word is:
+"gin" -> "--...-."
+"zen" -> "--...-."
+"gig" -> "--...--."
+"msg" -> "--...--."
+
+There are 2 different transformations, "--...-." and "--...--.".
+Note:
+
+The length of words will be at most 100.
+Each words[i] will have length in range [1, 12].
+words[i] will only consist of lowercase letters.*/
+
+
+C++:
+class Solution {
+public:
+    int uniqueMorseRepresentations(vector<string>& words) {
+        string code[26] = {".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."};
+        char letter[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}; 
+        if (words.size() == 0) return 0;
+        string wordscode[words.size()];
+        for(int i = 0; i < words.size(); i++){
+            for(int j = 0; j < words[i].length(); j++){
+                for(int k = 0; k < 26; k++){
+                    if(words[i][j] == letter[k]){
+                        wordscode[i] += code[k];
+                        break;
+                    }
+                }
+            }
+        }
+        
+        map <string, int> m;
+        for(auto wordcode :wordscode){
+            m[wordcode]++; 
+        }
+        return m.size();
+    }
+};
+
+Java:
+class Solution {
+    public int uniqueMorseRepresentations(String[] words) {
+        String[] codes = {".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."};
+        String[] letters = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+        HashMap<String, Integer> mapOfWords = new HashMap<String, Integer>();
+        int len = words.length; //for array -> the length have no brackets
+        String[] lettercode = new String[len]; 
+        for(int i = 0; i < len; i++){
+            for(int j = 0; j < words[i].length(); j++ ){ //for string -> length have brackets
+                for(int k = 0; k < 26; k++){
+                    if(letters[k].compareTo(words[i].substring(j,j+1)) == 0){
+                         lettercode[i]+= codes[k];
+                        break;
+                    }
+                }
+            }
+            mapOfWords.put(lettercode[i],1);
+        }
+        return mapOfWords.size();
+    }
+}
+
+Better C++ answer:
+//using unordered_set since there is no need to count appearance;
+// use character - 'a' to represent index instead of loop through
+
+class Solution {
+public:
+    int uniqueMorseRepresentations(vector<string>& words) {
+        string d[26] = {".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."};
+        unordered_set <string> s;
+        for(auto w: words){
+            string code;
+            for(auto c: w){
+                code += d[c - 'a'];
+            }
+            s.insert(code);
+        }
+        return s.size();
+    }
+};
+
+Better java:
+//use HashSet instead of HashMap;
+// use StringBuilder to create mutable string; need to remember to convert toString before add to the HashSet
+// use w.charAt(i) - 'a' to represent index
+
+class Solution {
+    public int uniqueMorseRepresentations(String[] words) {
+        String[] d = {".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."};
+        HashSet <String> s = new HashSet<>();
+        for(String w : words){
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < w.length(); i++){
+                sb.append(d[w.charAt(i) - 'a']);
+            }
+            s.add(sb.toString());
+        }
+        return s.size();
+    }   
+}
+
