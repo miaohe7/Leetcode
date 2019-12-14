@@ -1,0 +1,86 @@
+/*Reverse a singly linked list.
+
+Example:
+
+Input: 1->2->3->4->5->NULL
+Output: 5->4->3->2->1->NULL*/
+
+Iteratively:
+
+C++:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+//using three pointers and a middle value 0
+// it is iterate in a way like:
+// 0>1>2>3>4>5
+//after 1 iteration:
+// 0>2>1>3>4>5
+//after 2 iteration:
+//0>3>2>1>4>4 etc
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(head == NULL) return NULL;
+        ListNode *pre = new ListNode(0);
+        ListNode * cur = head;
+        pre->next = head;
+        while(cur && cur->next){
+            ListNode *temp = pre->next;
+            pre->next = cur->next;
+            cur->next = cur->next->next;
+            pre->next->next = temp;
+        }
+        return pre->next;
+    }
+};
+Recursively C++:
+//
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if (!head || !(head -> next)) {
+            return head;
+        }
+        ListNode* node = reverseList(head -> next);
+        head -> next -> next = head;
+        head -> next = NULL;
+        return node;
+    }
+};
+
+Recursion Java:
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode node = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+        return node;
+    }
+}
+
+Iteration Java:
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode cur = null;
+        while(head != null){
+            ListNode next = head.next;
+            head.next = cur;
+            cur = head;
+            head = next;
+        }
+        return cur;
+        }
+    
+}
