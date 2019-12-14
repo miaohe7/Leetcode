@@ -1,0 +1,81 @@
+/*Invert a binary tree.
+
+Example:
+
+Input:
+
+     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+Output:
+
+     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1*/
+
+
+C++ with recursion:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(root == NULL) return NULL;
+        if(root->left != NULL && root->right != NULL)
+        {
+            TreeNode * temp = root->left;
+            root->left = root->right;
+            root->right = temp;
+            invertTree(root->left);
+            invertTree(root->right);
+            return root;
+        }else if(root->right != NULL){
+            root->left = root->right;
+            root->right = NULL;
+            invertTree(root->left);
+            return root;
+        }else if(root->left != NULL){
+            root->right = root->left;
+            root->left = NULL;
+            invertTree(root->right);
+            return root;
+        }else return root;
+    }
+};
+
+Java Recursion:
+//Java is pass by value, need to gather the recursion result;
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if(root == null) return null;
+        if(root.left != null && root.right != null){
+            TreeNode temp = root.left;
+            root.left = root.right;
+            root.right = temp;
+            root.left = invertTree(root.left);
+            root.right = invertTree(root.right);
+            return root;
+        }else if(root.left != null){
+            root.right = root.left;
+            root.left = null;
+            root.right = invertTree(root.right);
+            return root;
+        }else if(root.right != null){
+            root.left = root.right;
+            root.right = null;
+            root.left = invertTree(root.left);
+            return root;
+        }else return root;
+    }
+}
