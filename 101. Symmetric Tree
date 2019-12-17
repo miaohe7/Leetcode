@@ -1,0 +1,117 @@
+/*Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+ 
+
+But the following [1,2,2,null,3,null,3] is not:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+ 
+
+Note:
+Bonus points if you could solve it both recursively and iteratively.*/
+
+Recursion:
+C++:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+       if(root) return compare(root->left,root->right);
+        else return true;
+    }
+    bool compare(TreeNode *left, TreeNode *right){
+        if((left != NULL) && (right != NULL)){
+            if(left->val == right->val){
+                return compare(left->right,right->left)
+                    && compare(left->left,right->right);
+            }else return false;
+        }else if((left == NULL) && (right == NULL)){
+            return true;
+        }else return false;
+    }
+};
+
+Iteration:
+use Queue; push root twice for the first comparison;then, each time poll twice to do compare;
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+     Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        q.add(root);
+        while (!q.isEmpty()){
+            TreeNode t1 = q.poll();
+            TreeNode t2 = q.poll();
+            if(t1 == null && t2 == null) continue;
+            if(t1 == null || t2 == null) return false;
+            if(t1.val != t2.val) return false;
+            q.add(t1.left);
+            q.add(t2.right);
+            q.add(t1.right);
+            q.add(t2.left);
+        }
+        return true;
+    }
+}
+
+C++:
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        queue <TreeNode *> q;
+        q.push(root);
+        q.push(root);
+        while(!q.empty()){
+            TreeNode* t1 = q.front();
+            q.pop();
+            TreeNode* t2 = q.front();
+            q.pop();
+            if(t1 == NULL && t2 == NULL) continue;
+            if(t1 == NULL || t2 == NULL) return false;
+            if(t1->val != t2->val) return false;
+            q.push(t1->left);
+            q.push(t2->right);
+            q.push(t1->right);
+            q.push(t2->left);
+        }
+        return true;
+    }
+};
+
