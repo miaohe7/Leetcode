@@ -1,0 +1,141 @@
+/*You are given a binary tree in which each node contains an integer value.
+
+Find the number of paths that sum to a given value.
+
+The path does not need to start or end at the root or a leaf, but it must go downwards (traveling only from parent nodes to child nodes).
+
+The tree has no more than 1,000 nodes and the values are in the range -1,000,000 to 1,000,000.
+
+Example:
+
+root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
+
+      10
+     /  \
+    5   -3
+   / \    \
+  3   2   11
+ / \   \
+3  -2   1
+
+Return 3. The paths that sum to 8 are:
+
+1.  5 -> 3
+2.  5 -> 2 -> 1
+3. -3 -> 11*/
+
+C++:
+//use an unordered_map to store all distinct covered pathSum and count;
+// For each Node, in paths function we keep a vector p to save all the pathSum that is
+// going downwards from the current node;
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    unordered_map <int,int> m;
+    int pathSum(TreeNode* root, int sum) {
+        if(root == NULL && sum != 0) return 0;
+        paths(root);
+        unordered_map<int, int>::iterator it;
+        it = m.find(sum);
+        if(it != m.end()){
+            return m[sum];
+        }else return 0;
+    }
+    vector<int> paths(TreeNode * node){
+        vector <int> p;
+        if(node != NULL){
+            m[node->val]++;
+            p.push_back(node->val);
+            vector<int> L;
+            vector<int> R;
+        if(node->left != NULL){
+            L = paths(node->left);
+            for(auto i:L){
+                p.push_back(i+node->val);
+                m[i+node->val]++;
+            }
+        }
+        if(node->right != NULL){
+            R = paths(node->right);
+            for(auto j: R){
+                p.push_back(j+node->val);
+                m[j+node->val]++;
+            }
+        }
+    }
+        return p;
+    }
+};
+
+
+easier recursion:
+C++:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int pathSum(TreeNode* root, int sum) {
+        if(root == NULL) return 0;
+        int count = 0;
+        count += pathSum(root->left,sum);
+        count += pathSum(root->right,sum);
+        count += path_Sum(root,sum);
+        return count;
+    }
+    int path_Sum(TreeNode * node, int sum){
+        if(node == NULL) return 0;
+        int count = 0;
+        sum = sum - node->val;
+        if(sum == 0) count++;
+        count += path_Sum(node->left,sum);
+        count += path_Sum(node->right,sum);
+        return count;
+    }
+};
+
+HashMap Solution Runtime O(N):
+Java:
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int pathSum(TreeNode root, int sum) {
+        Map<Integer,Integer> map = new HashMap<>();
+        map.put(0,1);
+        return backtrack(root,0,sum,map);
+    }
+    public int backtrack(TreeNode root, int sum, int target, Map<Integer,Integer> map){
+      if(root == null) return 0;
+        sum += root.val;
+        int res = map.getOrDefault(sum - target,0);
+        map.put(sum, map.getOrDefault(sum,0)+1);
+        res += backtrack(root.left,sum,target,map) + backtrack(root.right,sum,target, map);
+        map.put(sum,map.get(sum) - 1);
+        return res;
+    }
+}
+
