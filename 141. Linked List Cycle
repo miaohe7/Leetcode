@@ -1,0 +1,143 @@
+/*Given a linked list, determine if it has a cycle in it.
+
+To represent a cycle in the given linked list, we use an integer pos which represents the position (0-indexed) in the linked list where tail connects to. If pos is -1, then there is no cycle in the linked list.
+
+ 
+
+Example 1:
+
+Input: head = [3,2,0,-4], pos = 1
+Output: true
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+
+
+Example 2:
+
+Input: head = [1,2], pos = 0
+Output: true
+Explanation: There is a cycle in the linked list, where tail connects to the first node.
+
+
+Example 3:
+
+Input: head = [1], pos = -1
+Output: false
+Explanation: There is no cycle in the linked list.
+*/
+
+
+C++:
+use an unordered_set to store the head reference(address), if this address has seen before, we return true. If the cur-node is null,
+it means current linked list has no cycle.
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        unordered_set <ListNode *> nodeseen;
+        while(head != NULL){
+            if(nodeseen.find(head) != nodeseen.end()){
+                return true;
+            }else{
+                nodeseen.insert(head);
+            }
+            head = head->next;
+        }
+        return false;
+    }
+};
+
+
+Java:
+Using Hash set:
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        HashSet <ListNode> h = new HashSet<>();
+        while(head != null){
+            if(h.contains(head)){
+                return true;
+            }else{
+                h.add(head);
+            }
+            head = head.next;
+        }
+        return false;
+    }
+}
+
+Method using only O(1) extra space:
+C++:
+Using two pointers, the first pointer increase 1 each time, The second pointer increase 2 each time. If there is a cycle, these 
+two pointers will eventually encounter each other; If the fast pointer reach null, it means there is no cycle.
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if(head == NULL || head->next == NULL){
+            return false;
+        }
+        ListNode * slow = head;
+        ListNode * fast = head->next;
+        while(slow != fast ){
+            if(fast == NULL || fast->next == NULL){
+                return false;
+            }
+            slow = slow->next;
+            fast = fast->next->next;
+            
+        }
+        return true;
+    }
+};
+
+Java:
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head == null || head.next == null) return false;
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while(slow != fast){
+            if(fast == null || fast.next == null){
+                return false;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return true;
+    }
+}
