@@ -1,0 +1,68 @@
+/*Given a non-empty array of integers, return the k most frequent elements.
+
+Example 1:
+
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+Example 2:
+
+Input: nums = [1], k = 1
+Output: [1]*/
+
+Using map to count frequence, then save it to a vector of pairs to sort according to each item's value;
+Then print out the first kth elements in the sorted vector of pairs;
+C++:
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        map <int,int> m;
+        for(int i = 0; i < nums.size(); i++){
+            m[nums[i]]++;
+        }
+        vector<pair<int,int>> pairs;
+        for(auto itr = m.begin(); itr != m.end(); ++itr){
+            pairs.push_back(*itr);
+        }
+        sort(pairs.begin(),pairs.end(),[=](pair<int,int> &a, pair<int,int> &b){
+            return a.second > b.second;
+        });
+        vector<int> result;
+        for(int i = 0; i < k; i++){
+            result.push_back(pairs[i].first);
+        }
+        return result;
+    }
+};
+
+Java:
+Use bucket sort:
+After go through the list to store each value's frequency:
+Since we know there are only n possibility of frequencies; Therefore, we create n buckets to store the value that have 
+those frequencies.
+For example, if number 1 has frequency 1, we store it in the position 1;
+
+class Solution {
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        List<Integer>[] bucket = new List[nums.length +1];
+        Map<Integer, Integer> frequencyMap = new HashMap<Integer, Integer>();
+        
+        for(int n : nums){
+            frequencyMap.put(n, frequencyMap.getOrDefault(n,0) + 1);
+        }
+        for(int key : frequencyMap.keySet()){
+            int frequency = frequencyMap.get(key);
+            if(bucket[frequency] == null){
+                bucket[frequency] = new ArrayList<>();
+            }
+            bucket[frequency].add(key);
+        }
+        List<Integer>res = new ArrayList<>();
+        for(int pos = bucket.length - 1; pos >= 0 && res.size() < k; pos--){
+            if(bucket[pos]!=null){
+                res.addAll(bucket[pos]);
+            }
+        }
+        return res;
+    }
+}
+
