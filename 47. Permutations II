@@ -1,0 +1,35 @@
+/*Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+Example:
+
+Input: [1,1,2]
+Output:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]*/
+
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        vector<vector<int>> result;
+        backtrack(nums, 0, result);
+        return result;
+    }
+    private:
+    void backtrack(vector<int> nums, int i,
+                  vector<vector<int>> &result){ // remember to pass nums by copy, because sort mass up with locations
+        if(i == nums.size()){
+            result.push_back(nums);
+        }else{
+            for(int j = i; j < nums.size(); j++){ 
+                if( j == i || nums[i] != nums[j]){
+                    swap(nums[i],nums[j]);
+                    backtrack(nums, i+1, result);
+                }
+            }
+        }
+    }
+};
