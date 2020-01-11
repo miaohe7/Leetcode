@@ -1,0 +1,58 @@
+/*Given a collection of integers that might contain duplicates, nums, return all possible subsets (the power set).
+
+Note: The solution set must not contain duplicate subsets.
+
+Example:
+
+Input: [1,2,2]
+Output:
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]*/
+
+C++:
+
+class Solution {
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        vector<vector<int>> result;
+        vector<int> set;
+        sort(nums.begin(),nums.end());
+        backtrack(nums, result, 0, set);
+        return result;
+    }
+    void backtrack(vector<int>& nums, vector<vector <int>>& result, int start, vector<int> set){
+        result.push_back(set);
+        for(int i = start; i < nums.size(); i++){
+            if(i > start && nums[i] == nums[i - 1]) continue; // skip duplicates
+            // this step is to eliminate the same element after poping one element
+            set.push_back(nums[i]);
+            backtrack(nums,result, i+1, set);
+            set.pop_back();
+        }
+    }
+};
+
+Java:
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(nums);
+        backtrack(result, nums, 0, new ArrayList<>());
+        return result;
+    }
+    public void backtrack(List<List<Integer>> result, int [] nums, int start, List<Integer> curr){
+        result.add(new ArrayList<>(curr));
+        for(int i = start; i < nums.length; i++){
+            if(i > start && nums[i] == nums[i - 1]) continue;
+            curr.add(nums[i]);
+            backtrack(result, nums, i+1, curr);
+            curr.remove(curr.size() - 1);
+        }
+    }
+}
