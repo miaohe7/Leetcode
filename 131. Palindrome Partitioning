@@ -1,0 +1,79 @@
+/*Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return all possible palindrome partitioning of s.
+
+Example:
+
+Input: "aab"
+Output:
+[
+  ["aa","b"],
+  ["a","a","b"]
+]*/
+
+C++:
+using backtrack:
+class Solution {
+public:
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> res;
+        if(s.empty()) return res;
+        vector<string> path;
+        backtrack(res, path, s, 0);
+        return res;
+    }
+    void backtrack(vector<vector<string>>& res, vector<string>& path, 
+                   string &s,
+                  int index){
+        if(index == s.size()){ // reach the end of string
+            res.push_back(path);
+            return;
+        }
+        for(int i = index; i < s.length();i++){// starting from index, determine whether it can be a palindrome
+            if(palindrome(s, index, i)){
+                path.push_back(s.substr(index, i - index + 1));
+                backtrack(res,path,s, i+1);
+                path.pop_back();
+            }
+        }
+    }
+    bool palindrome(string &s, int start, int i){
+        while(start <= i){
+            if(s[start++] != s[i--]) return false;
+        }
+        return true;
+    }
+};
+
+Java:
+In wrapper function we have defined a dp[][] for dynamic programming, to store the boolean value of:
+whether s.substring(i,j) is palindrome.
+
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        boolean [][] dp = new boolean[s.length()][s.length()];
+        for(int i = 0; i < s.length(); i++){
+            for(int j = 0; j <= i; j++){
+                if(s.charAt(i) == s.charAt(j) && (i - j <= 2 || dp[j+1][i-1])){
+                    dp[j][i] = true;
+                }
+            }
+        }
+        helper(res, new ArrayList<>(),dp,s,0);
+        return res;
+    }
+    public void helper(List<List<String>> res, List<String> path, boolean[][] dp, String s, int start){
+        if(start == s.length()){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for(int i= start; i < s.length(); i++){
+            if(dp[start][i]){
+                path.add(s.substring(start,i+1));
+                helper(res, path, dp, s, i+1);
+                path.remove(path.size()-1);
+            }
+        }
+    }
+}
