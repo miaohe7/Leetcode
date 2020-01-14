@@ -1,0 +1,97 @@
+/*Given an integer array with all positive numbers and no duplicates, find the number of possible combinations that add up to a positive integer target.
+
+Example:
+
+nums = [1, 2, 3]
+target = 4
+
+The possible combination ways are:
+(1, 1, 1, 1)
+(1, 1, 2)
+(1, 2, 1)
+(1, 3)
+(2, 1, 1)
+(2, 2)
+(3, 1)
+
+Note that different sequences are counted as different combinations.
+
+Therefore the output is 7.*/
+
+C++: backtrack gives the right answer, but slow, it will exceed time limit if the target sum is big while the nums are small;
+Backtrack:
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        vector<vector<int>> result;
+        vector<int> list;
+        backtrack(result, list, nums, target, 0);
+        return result.size();
+    }
+    void backtrack(vector<vector<int>> & result, vector<int> &list,
+                  vector<int> &nums, int target, int start){
+        if(target < 0) return;
+        if(target == 0){
+            result.push_back(list);
+        }else{
+            for(int i = 0; i < nums.size(); i++){
+                list.push_back(nums[i]);
+                backtrack(result, list, nums, target - nums[i], i);
+                list.pop_back();
+            }
+        }
+    }
+};
+
+
+Using DP:
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        int dp[target + 1];
+        dp[0] = 1;
+        for(int i = 1; i <= target; i++){
+            dp[i] = -1;
+        }
+        return helper(nums, target,dp);
+    }
+    int helper(vector<int> & nums, int target, int dp[]){
+        if(dp[target] != -1) return dp[target];
+        int res = 0;
+        for(int i = 0; i < nums.size(); i++){
+            if(target >= nums[i]){
+                res+= helper(nums, target - nums[i],dp);
+            }
+        }
+        dp[target] = res;
+        return dp[target];
+    }
+};
+
+
+Java:
+Using dp:
+save the known result into dp;
+
+class Solution {
+    private int[] dp;
+    public int combinationSum4(int[] nums, int target) {
+        dp = new int[target + 1];
+        Arrays.fill(dp,-1);
+        dp[0] = 1;
+        return helper(nums, target);
+    }
+    private int helper(int[] nums, int target){
+        if(dp[target] != -1){
+            return dp[target];
+        }
+        int res = 0;
+        for(int i = 0; i < nums.length; i++){
+            if(target >= nums[i]){
+                res += helper(nums,target - nums[i]);
+            }
+        }
+        dp[target] = res;
+        return res;
+    }
+}
