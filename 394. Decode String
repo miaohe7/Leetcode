@@ -43,3 +43,39 @@ public:
     }
 };
 
+Java:
+
+
+class Solution {
+    public String decodeString(String s) {
+        String res = "";
+        Stack<Integer> count = new Stack<>();
+        Stack<String> resStack = new Stack<>();
+        int index = 0;
+        while(index < s.length()){
+            if(Character.isDigit(s.charAt(index))){
+                int num = 0;
+                while(Character.isDigit(s.charAt(index))){
+                    num = 10 *num + (s.charAt(index) - '0');
+                    index++;
+                }
+                count.push(num);
+            }else if(s.charAt(index) == '['){
+                resStack.push(res); //????
+                res=""; //
+                index++; //???
+            }else if(s.charAt(index)==']'){
+                StringBuilder temp = new StringBuilder(resStack.pop());
+                int repeat = count.pop();
+                for(int i = 0; i < repeat; i++){
+                    temp.append(res);
+                }
+                res = temp.toString();
+                index++;
+            }else{
+                res += s.charAt(index++);
+            }
+        }
+        return res;
+    }
+}
